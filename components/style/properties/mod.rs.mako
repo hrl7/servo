@@ -4,7 +4,7 @@
 
 // This file is a Mako template: http://www.makotemplates.org/
 
-pub use std::ascii::StrAsciiExt;
+pub use std::ascii::AsciiExt;
 
 use servo_util::logical_geometry::{WritingMode, LogicalMargin};
 use sync::Arc;
@@ -160,7 +160,7 @@ pub mod longhands {
             ${caller.body()}
             pub mod computed_value {
                 #[allow(non_camel_case_types)]
-                #[deriving(PartialEq, Clone, FromPrimitive)]
+                #[deriving(PartialEq, Clone, FromPrimitive, Show)]
                 pub enum T {
                     % for value in values.split():
                         ${to_rust_ident(value)},
@@ -942,7 +942,7 @@ pub mod longhands {
             use super::super::Au;
             pub type T = Au;
         }
-        static MEDIUM_PX: int = 16;
+        const MEDIUM_PX: int = 16;
         #[inline] pub fn get_initial_value() -> computed_value::T {
             Au::from_px(MEDIUM_PX)
         }
@@ -999,7 +999,8 @@ pub mod longhands {
         }
         pub mod computed_value {
             pub type T = super::SpecifiedValue;
-            pub static none: T = super::SpecifiedValue { underline: false, overline: false, line_through: false };
+            #[allow(non_upper_case_globals)]
+            pub const none: T = super::SpecifiedValue { underline: false, overline: false, line_through: false };
         }
         #[inline] pub fn get_initial_value() -> computed_value::T {
             none

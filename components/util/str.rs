@@ -69,11 +69,8 @@ pub fn split_html_space_chars<'a>(s: &'a str) -> Filter<'a, &'a str, CharSplits<
 /// <http://www.whatwg.org/html/#rules-for-parsing-integers> or
 /// <http://www.whatwg.org/html/#rules-for-parsing-non-negative-integers>.
 fn do_parse_integer<T: Iterator<char>>(input: T) -> Option<i64> {
-    fn is_ascii_digit(c: &char) -> bool {
-        match *c {
-            '0'..'9' => true,
-            _ => false,
-        }
+    fn is_ascii_digit(c: char) -> bool {
+        c >= '0' && c <= '9'
     }
 
 
@@ -95,11 +92,11 @@ fn do_parse_integer<T: Iterator<char>>(input: T) -> Option<i64> {
     };
 
     match input.peek() {
-        Some(c) if is_ascii_digit(c) => (),
+        Some(&c) if is_ascii_digit(c) => (),
         _ => return None,
     }
 
-    let value = input.take_while(is_ascii_digit).map(|d| {
+    let value = input.take_while(|&c| is_ascii_digit(c)).map(|d| {
         d as i64 - '0' as i64
     }).fold(Some(0i64), |accumulator, d| {
         accumulator.and_then(|accumulator| {
@@ -152,7 +149,7 @@ pub fn parse_length(mut value: &str) -> LengthOrPercentageOrAuto {
     let (mut found_full_stop, mut found_percent) = (false, false);
     for (i, ch) in value.chars().enumerate() {
         match ch {
-            '0'..'9' => continue,
+            '0'...'9' => continue,
             '%' => {
                 found_percent = true;
                 end_index = i;

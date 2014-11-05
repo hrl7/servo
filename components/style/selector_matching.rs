@@ -2,8 +2,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+#![allow(non_upper_case_globals)]
+
 use std::ascii::AsciiExt;
-use std::collections::hashmap::HashMap;
+use std::collections::HashMap;
 use std::hash::Hash;
 use std::num::div_rem;
 use sync::Arc;
@@ -155,7 +157,7 @@ impl SelectorMap {
                                               where E: TElement<'a> + TElementAttributes,
                                                     N: TNode<'a,E>,
                                                     V: VecLike<DeclarationBlock> {
-        match hash.find(key) {
+        match hash.get(key) {
             Some(rules) => {
                 SelectorMap::get_matching_rules(node,
                                                 parent_bf,
@@ -813,11 +815,11 @@ fn matches_compound_selector_internal<'a,E,N>(selector: &CompoundSelector,
 
 bitflags! {
     flags CommonStyleAffectingAttributes: u8 {
-        static HiddenAttribute = 0x01,
-        static NoWrapAttribute = 0x02,
-        static AlignLeftAttribute = 0x04,
-        static AlignCenterAttribute = 0x08,
-        static AlignRightAttribute = 0x10,
+        const HiddenAttribute = 0x01,
+        const NoWrapAttribute = 0x02,
+        const AlignLeftAttribute = 0x04,
+        const AlignCenterAttribute = 0x08,
+        const AlignRightAttribute = 0x10,
     }
 }
 
@@ -1176,7 +1178,7 @@ trait FindPush<K, V> {
 
 impl<K: Eq + Hash, V> FindPush<K, V> for HashMap<K, Vec<V>> {
     fn find_push(&mut self, key: K, value: V) {
-        match self.find_mut(&key) {
+        match self.get_mut(&key) {
             Some(vec) => {
                 vec.push(value);
                 return

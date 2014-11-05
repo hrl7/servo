@@ -11,7 +11,7 @@ use context::SharedLayoutContext;
 use flow::{mod, Flow, ImmutableFlowUtils, MutableFlowUtils, MutableOwnedFlowUtils};
 use flow_ref::FlowRef;
 use fragment::{Fragment, FragmentBoundsIterator};
-use incremental::{LayoutDamageComputation, Reflow, ReflowEntireDocument, Repaint};
+use incremental::{LayoutDamageComputation, REFLOW, REFLOW_ENTIRE_DOCUMENT, REPAINT};
 use layout_debug;
 use parallel::UnsafeFlow;
 use parallel;
@@ -339,7 +339,7 @@ impl LayoutTask {
             } else if ret == port2.id() {
                 Pipeline
             } else {
-                fail!("invalid select result");
+                panic!("invalid select result");
             }
         };
 
@@ -443,7 +443,7 @@ impl LayoutTask {
                     break
                 }
                 _ => {
-                    fail!("layout: message that wasn't `ExitNowMsg` received after \
+                    panic!("layout: message that wasn't `ExitNowMsg` received after \
                            `PrepareToExitMsg`")
                 }
             }
@@ -559,7 +559,7 @@ impl LayoutTask {
         let _scope = layout_debug_scope!("solve_constraints_parallel");
 
         match rw_data.parallel_traversal {
-            None => fail!("solve_contraints_parallel() called with no parallel traversal ready"),
+            None => panic!("solve_contraints_parallel() called with no parallel traversal ready"),
             Some(ref mut traversal) => {
                 // NOTE: this currently computes borders, so any pruning should separate that
                 // operation out.
@@ -663,12 +663,10 @@ impl LayoutTask {
                                                                          .background_color)
                                          .to_gfx_color()
                     };
-                    match element_bg_color {
-                        color::rgba(0., 0., 0., 0.) => {}
-                        _ => {
-                            color = element_bg_color;
-                            break;
-                       }
+                    if element_bg_color.r != 0.0 || element_bg_color.g != 0.0 ||
+                       element_bg_color.b != 0.0 || element_bg_color.a != 0.0 {
+                        color = element_bg_color;
+                        break;
                     }
                 }
             }
@@ -796,8 +794,8 @@ impl LayoutTask {
                 self.time_profiler_chan.clone(),
                 || {
             if opts::get().nonincremental_layout ||
-                    layout_root.compute_layout_damage().contains(ReflowEntireDocument) {
-                layout_root.reflow_entire_document()
+                    layout_root.deref_mut().compute_layout_damage().contains(REFLOW_ENTIRE_DOCUMENT) {
+                layout_root.deref_mut().reflow_entire_document()
             }
         });
 
@@ -882,7 +880,7 @@ impl LayoutTask {
     }
 
     fn reflow_all_nodes(flow: &mut Flow) {
-        flow::mut_base(flow).restyle_damage.insert(Reflow | Repaint);
+        flow::mut_base(flow).restyle_damage.insert(REFLOW | REPAINT);
 
         for child in flow::child_iter(flow) {
             LayoutTask::reflow_all_nodes(child);
@@ -928,7 +926,7 @@ impl LayoutRPC for LayoutRPCImpl {
     /// Requests the dimensions of all the content boxes, as in the `getClientRects()` call.
     fn content_boxes(&self) -> ContentBoxesResponse {
         let &LayoutRPCImpl(ref rw_data) = self;
-        let mut rw_data = rw_data.lock();
+        let rw_data = rw_data.lock();
         ContentBoxesResponse(rw_data.content_boxes_response.clone())
     }
 
@@ -951,7 +949,7 @@ impl LayoutRPC for LayoutRPCImpl {
             let &LayoutRPCImpl(ref rw_data) = self;
             let rw_data = rw_data.lock();
             match rw_data.display_list {
-                None => fail!("no display list!"),
+                None => panic!("no display list!"),
                 Some(ref display_list) => hit_test(point, display_list.list.iter().rev()),
             }
         };
@@ -982,7 +980,7 @@ impl LayoutRPC for LayoutRPCImpl {
             let &LayoutRPCImpl(ref rw_data) = self;
             let rw_data = rw_data.lock();
             match rw_data.display_list {
-                None => fail!("no display list!"),
+                None => panic!("no display list!"),
                 Some(ref display_list) => {
                     mouse_over_test(point, display_list.list.iter().rev(), &mut mouse_over_list);
                 }

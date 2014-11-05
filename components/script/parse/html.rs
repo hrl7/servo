@@ -26,7 +26,7 @@ use servo_net::resource_task::{Load, LoadData, Payload, Done, ResourceTask};
 use servo_msg::constellation_msg::LoadData as MsgLoadData;
 use servo_util::task_state;
 use servo_util::task_state::InHTMLParser;
-use std::ascii::StrAsciiExt;
+use std::ascii::AsciiExt;
 use std::comm::channel;
 use std::str::MaybeOwned;
 use url::Url;
@@ -48,19 +48,19 @@ fn parse_last_modified(timestamp: &str) -> String {
 
     // RFC 822, updated by RFC 1123
     match time::strptime(timestamp, "%a, %d %b %Y %T %Z") {
-        Ok(t) => return t.to_local().strftime(format),
+        Ok(t) => return t.to_local().strftime(format).unwrap(),
         Err(_) => ()
     }
 
     // RFC 850, obsoleted by RFC 1036
     match time::strptime(timestamp, "%A, %d-%b-%y %T %Z") {
-        Ok(t) => return t.to_local().strftime(format),
+        Ok(t) => return t.to_local().strftime(format).unwrap(),
         Err(_) => ()
     }
 
     // ANSI C's asctime() format
     match time::strptime(timestamp, "%c") {
-        Ok(t) => t.to_local().strftime(format),
+        Ok(t) => t.to_local().strftime(format).unwrap(),
         Err(_) => String::from_str("")
     }
 }
@@ -210,7 +210,7 @@ pub fn parse_html(page: &Page,
 
             let load_response = input_port.recv();
 
-            debug!("Fetched page; metadata is {:?}", load_response.metadata);
+            //debug!("Fetched page; metadata is {}", load_response.metadata);
 
             load_response.metadata.headers.as_ref().map(|headers| {
                 let header = headers.iter().find(|h|
@@ -268,7 +268,7 @@ pub fn parse_html(page: &Page,
                                 parser.parse_chunk(data);
                             }
                             Done(Err(err)) => {
-                                fail!("Failed to load page URL {:s}, error: {:s}", url.serialize(), err);
+                                panic!("Failed to load page URL {:s}, error: {:s}", url.serialize(), err);
                             }
                             Done(Ok(())) => break,
                         }

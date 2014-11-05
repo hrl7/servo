@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#![deny(missing_doc)]
+#![deny(missing_docs)]
 
 //! Utilities for tracing JS-managed values.
 //!
@@ -40,7 +40,7 @@ use url::Url;
 use msg::constellation_msg::{PipelineId, SubpageId, WindowSizeData};
 use net::image_cache_task::ImageCacheTask;
 use script_traits::ScriptControlChan;
-use std::collections::hashmap::HashMap;
+use std::collections::HashMap;
 use collections::hash::{Hash, Hasher};
 use style::PropertyDeclarationBlock;
 use std::comm::{Receiver, Sender};

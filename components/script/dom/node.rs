@@ -126,23 +126,31 @@ bitflags! {
     #[jstraceable]
     flags NodeFlags: u8 {
         #[doc = "Specifies whether this node is in a document."]
-        static IsInDoc = 0x01,
+        #[allow(non_upper_case_globals)]
+        const IsInDoc = 0x01,
         #[doc = "Specifies whether this node is in hover state."]
-        static InHoverState = 0x02,
+        #[allow(non_upper_case_globals)]
+        const InHoverState = 0x02,
         #[doc = "Specifies whether this node is in disabled state."]
-        static InDisabledState = 0x04,
+        #[allow(non_upper_case_globals)]
+        const InDisabledState = 0x04,
         #[doc = "Specifies whether this node is in enabled state."]
-        static InEnabledState = 0x08,
+        #[allow(non_upper_case_globals)]
+        const InEnabledState = 0x08,
         #[doc = "Specifies whether this node _must_ be reflowed regardless of style differences."]
-        static HasChanged = 0x10,
+        #[allow(non_upper_case_globals)]
+        const HasChanged = 0x10,
         #[doc = "Specifies whether this node needs style recalc on next reflow."]
-        static IsDirty = 0x20,
+        #[allow(non_upper_case_globals)]
+        const IsDirty = 0x20,
         #[doc = "Specifies whether this node has siblings (inclusive of itself) which \
                   changed since the last reflow."]
-        static HasDirtySiblings = 0x40,
+        #[allow(non_upper_case_globals)]
+        const HasDirtySiblings = 0x40,
         #[doc = "Specifies whether this node has descendants (inclusive of itself) which \
                  have changed since the last reflow."]
-        static HasDirtyDescendants = 0x80,
+        #[allow(non_upper_case_globals)]
+        const HasDirtyDescendants = 0x80,
     }
 }
 
@@ -384,7 +392,7 @@ pub trait NodeHelpers<'a> {
     fn child_elements(self) -> ChildElementIterator<'a>;
     fn following_siblings(self) -> NodeChildrenIterator<'a>;
     fn is_in_doc(self) -> bool;
-    fn is_inclusive_ancestor_of(self, parent: JSRef<Node>) -> bool;
+    fn is_inclusive_ancestor_of(self, parent: JSRef<'a, Node>) -> bool;
     fn is_parent_of(self, child: JSRef<Node>) -> bool;
 
     fn type_id(self) -> NodeTypeId;
@@ -482,7 +490,7 @@ impl<'a> NodeHelpers<'a> for JSRef<'a, Node> {
 
     /// Returns a string that describes this node.
     fn debug_str(self) -> String {
-        format!("{:?}", self.type_id)
+        format!("{}", self.type_id)
     }
 
     fn is_in_doc(self) -> bool {
@@ -670,7 +678,7 @@ impl<'a> NodeHelpers<'a> for JSRef<'a, Node> {
         }
     }
 
-    fn is_inclusive_ancestor_of(self, parent: JSRef<Node>) -> bool {
+    fn is_inclusive_ancestor_of(self, parent: JSRef<'a, Node>) -> bool {
         self == parent || parent.ancestors().any(|ancestor| ancestor == self)
     }
 
@@ -840,7 +848,7 @@ pub fn from_untrusted_node_address(runtime: *mut JSRuntime, candidate: Untrusted
         let object: *mut JSObject = jsfriendapi::bindgen::JS_GetAddressableObject(runtime,
                                                                                   candidate);
         if object.is_null() {
-            fail!("Attempted to create a `JS<Node>` from an invalid pointer!")
+            panic!("Attempted to create a `JS<Node>` from an invalid pointer!")
         }
         let boxed_node: *const Node = utils::unwrap(object);
         Temporary::new(JS::from_raw(boxed_node))
@@ -1311,7 +1319,7 @@ impl Node {
 
         // Step 7-8.
         let referenceChild = match child {
-            Some(child) if child == node => node.next_sibling().map(|node| (*node.root()).clone()),
+            Some(child) if child.clone() == node => node.next_sibling().map(|node| (*node.root()).clone()),
             _ => child
         };
 
@@ -1903,7 +1911,7 @@ impl<'a> NodeMethods for JSRef<'a, Node> {
         }
 
         // Ok if not caught by previous error checks.
-        if node == child {
+        if node.clone() == child {
             return Ok(Temporary::from_rooted(child));
         }
 
@@ -2059,7 +2067,7 @@ impl<'a> NodeMethods for JSRef<'a, Node> {
 
     // http://dom.spec.whatwg.org/#dom-node-comparedocumentposition
     fn CompareDocumentPosition(self, other: JSRef<Node>) -> u16 {
-        if self == other {
+        if self.clone() == other {
             // step 2.
             0
         } else {

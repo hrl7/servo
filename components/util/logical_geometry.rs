@@ -2,7 +2,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+#![allow(non_upper_case_globals)]
+
 /// Geometry in flow-relative space.
+
 
 use geom::{Size2D, Point2D, SideOffsets2D, Rect};
 use std::cmp::{min, max};
@@ -12,10 +15,10 @@ use std::num::Zero;
 bitflags!(
     #[deriving(Encodable)]
     flags WritingMode: u8 {
-        static FlagRTL = 1 << 0,
-        static FlagVertical = 1 << 1,
-        static FlagVerticalLR = 1 << 2,
-        static FlagSidewaysLeft = 1 << 3
+        const FlagRTL = 1 << 0,
+        const FlagVertical = 1 << 1,
+        const FlagVerticalLR = 1 << 2,
+        const FlagSidewaysLeft = 1 << 3
     }
 )
 

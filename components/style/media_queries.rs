@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-use std::ascii::StrAsciiExt;
+use std::ascii::AsciiExt;
 use cssparser::parse_rule_list;
 use cssparser::ast::*;
 
@@ -25,6 +25,7 @@ pub struct MediaQueryList {
     media_queries: Vec<MediaQuery>
 }
 
+#[allow(dead_code)]
 pub enum Range<T> {
     Min(T),
     Max(T),
@@ -479,7 +480,7 @@ mod tests {
             assert!(q.expressions.len() == 1, css.to_string());
             match q.expressions[0] {
                 Width(Min(w)) => assert!(w == Au::from_px(100)),
-                _ => fail!("wrong expression type"),
+                _ => panic!("wrong expression type"),
             }
         });
 
@@ -491,7 +492,7 @@ mod tests {
             assert!(q.expressions.len() == 1, css.to_string());
             match q.expressions[0] {
                 Width(Max(w)) => assert!(w == Au::from_px(43)),
-                _ => fail!("wrong expression type"),
+                _ => panic!("wrong expression type"),
             }
         });
     }
@@ -506,7 +507,7 @@ mod tests {
             assert!(q.expressions.len() == 1, css.to_string());
             match q.expressions[0] {
                 Width(Min(w)) => assert!(w == Au::from_px(100)),
-                _ => fail!("wrong expression type"),
+                _ => panic!("wrong expression type"),
             }
         });
 
@@ -518,7 +519,7 @@ mod tests {
             assert!(q.expressions.len() == 1, css.to_string());
             match q.expressions[0] {
                 Width(Max(w)) => assert!(w == Au::from_px(43)),
-                _ => fail!("wrong expression type"),
+                _ => panic!("wrong expression type"),
             }
         });
 
@@ -530,7 +531,7 @@ mod tests {
             assert!(q.expressions.len() == 1, css.to_string());
             match q.expressions[0] {
                 Width(Max(w)) => assert!(w == Au::from_px(52)),
-                _ => fail!("wrong expression type"),
+                _ => panic!("wrong expression type"),
             }
         });
     }
@@ -545,11 +546,11 @@ mod tests {
             assert!(q.expressions.len() == 2, css.to_string());
             match q.expressions[0] {
                 Width(Min(w)) => assert!(w == Au::from_px(100)),
-                _ => fail!("wrong expression type"),
+                _ => panic!("wrong expression type"),
             }
             match q.expressions[1] {
                 Width(Max(w)) => assert!(w == Au::from_px(200)),
-                _ => fail!("wrong expression type"),
+                _ => panic!("wrong expression type"),
             }
         });
 
@@ -561,11 +562,11 @@ mod tests {
             assert!(q.expressions.len() == 2, css.to_string());
             match q.expressions[0] {
                 Width(Min(w)) => assert!(w == Au::from_px(100)),
-                _ => fail!("wrong expression type"),
+                _ => panic!("wrong expression type"),
             }
             match q.expressions[1] {
                 Width(Max(w)) => assert!(w == Au::from_px(200)),
-                _ => fail!("wrong expression type"),
+                _ => panic!("wrong expression type"),
             }
         });
     }

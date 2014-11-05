@@ -148,7 +148,7 @@ impl DedicatedWorkerGlobalScope {
                     Ok(FireTimerMsg(FromWorker, timer_id)) => {
                         scope.handle_fire_timer(timer_id, js_context.ptr);
                     }
-                    Ok(_) => fail!("Unexpected message"),
+                    Ok(_) => panic!("Unexpected message"),
                     Err(_) => break,
                 }
             }

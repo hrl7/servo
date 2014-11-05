@@ -102,7 +102,7 @@ pub trait TLayoutNode {
         unsafe {
             match HTMLImageElementCast::to_js(self.get_jsmanaged()) {
                 Some(elem) => elem.image().as_ref().map(|url| (*url).clone()),
-                None => fail!("not an image!")
+                None => panic!("not an image!")
             }
         }
     }
@@ -114,7 +114,7 @@ pub trait TLayoutNode {
             let iframe_element: JS<HTMLIFrameElement> =
                 match HTMLIFrameElementCast::to_js(self.get_jsmanaged()) {
                     Some(elem) => elem,
-                    None => fail!("not an iframe element!")
+                    None => panic!("not an iframe element!")
                 };
             let size = (*iframe_element.unsafe_get()).size().unwrap();
             (*size.pipeline_id(), *size.subpage_id())
@@ -187,7 +187,7 @@ impl<'ln> TLayoutNode for LayoutNode<'ln> {
                 Some(text) => (*text.unsafe_get()).characterdata().data_for_layout().to_string(),
                 None => match HTMLInputElementCast::to_js(self.get_jsmanaged()) {
                     Some(input) => input.get_value_for_layout(),
-                    None => fail!("not text!")
+                    None => panic!("not text!")
                 }
             }
         }
@@ -342,7 +342,7 @@ impl<'ln> TNode<'ln, LayoutElement<'ln>> for LayoutNode<'ln> {
         unsafe {
             let elem: JS<Element> = match ElementCast::to_js(&self.node) {
                 Some(elem) => elem,
-                None => fail!("not an element")
+                None => panic!("not an element")
             };
 
             let element = &*elem.unsafe_get();
@@ -752,7 +752,7 @@ impl<'ln> ThreadSafeLayoutNode<'ln> {
         unsafe {
             let element = match ElementCast::to_js(self.get_jsmanaged()) {
                 Some(e) => e.unsafe_get(),
-                None => fail!("not an element")
+                None => panic!("not an element")
             };
             // FIXME(pcwalton): Workaround until Rust gets multiple lifetime parameters on
             // implementations.
@@ -888,7 +888,7 @@ impl<'ln> ThreadSafeLayoutNode<'ln> {
         unsafe {
             match HTMLInputElementCast::to_js(self.get_jsmanaged()) {
                 Some(input) => input.get_value_for_layout(),
-                None => fail!("not an input element!")
+                None => panic!("not an input element!")
             }
         }
     }
@@ -897,7 +897,7 @@ impl<'ln> ThreadSafeLayoutNode<'ln> {
         unsafe {
             match HTMLInputElementCast::to_js(self.get_jsmanaged()) {
                 Some(input) => input.get_size_for_layout(),
-                None => fail!("not an input element!")
+                None => panic!("not an input element!")
             }
         }
     }
@@ -914,7 +914,7 @@ impl<'ln> ThreadSafeLayoutNode<'ln> {
         let mut layout_data_ref = self.mutate_layout_data();
         match &mut *layout_data_ref {
             &Some(ref mut layout_data) => layout_data.data.restyle_damage = damage,
-            _ => fail!("no layout data for this node"),
+            _ => panic!("no layout data for this node"),
         }
     }
 
@@ -922,7 +922,7 @@ impl<'ln> ThreadSafeLayoutNode<'ln> {
     pub fn flags(self) -> LayoutDataFlags {
         unsafe {
             match *self.borrow_layout_data_unchecked() {
-                None => fail!(),
+                None => panic!(),
                 Some(ref layout_data) => layout_data.data.flags,
             }
         }
@@ -933,7 +933,7 @@ impl<'ln> ThreadSafeLayoutNode<'ln> {
         let mut layout_data_ref = self.mutate_layout_data();
         match &mut *layout_data_ref {
             &Some(ref mut layout_data) => layout_data.data.flags.insert(new_flags),
-            _ => fail!("no layout data for this node"),
+            _ => panic!("no layout data for this node"),
         }
     }
 
@@ -942,7 +942,7 @@ impl<'ln> ThreadSafeLayoutNode<'ln> {
         let mut layout_data_ref = self.mutate_layout_data();
         match &mut *layout_data_ref {
             &Some(ref mut layout_data) => layout_data.data.flags.remove(flags),
-            _ => fail!("no layout data for this node"),
+            _ => panic!("no layout data for this node"),
         }
     }
 }

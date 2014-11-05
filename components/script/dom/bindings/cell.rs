@@ -87,8 +87,8 @@ impl<T: JSTraceable> JSTraceable for DOMRefCell<T> {
 // Values [1, MAX-1] represent the number of `Ref` active
 // (will not outgrow its range since `uint` is the size of the address space)
 type BorrowFlag = uint;
-static UNUSED: BorrowFlag = 0;
-static WRITING: BorrowFlag = -1;
+const UNUSED: BorrowFlag = 0;
+const WRITING: BorrowFlag = -1;
 
 impl<T> DOMRefCell<T> {
     pub fn new(value: T) -> DOMRefCell<T> {
@@ -108,14 +108,14 @@ impl<T> DOMRefCell<T> {
     pub fn borrow<'a>(&'a self) -> Ref<'a, T> {
         match self.try_borrow() {
             Some(ptr) => ptr,
-            None => fail!("DOMRefCell<T> already mutably borrowed")
+            None => panic!("DOMRefCell<T> already mutably borrowed")
         }
     }
 
     pub fn borrow_mut<'a>(&'a self) -> RefMut<'a, T> {
         match self.try_borrow_mut() {
             Some(ptr) => ptr,
-            None => fail!("DOMRefCell<T> already borrowed")
+            None => panic!("DOMRefCell<T> already borrowed")
         }
     }
 }

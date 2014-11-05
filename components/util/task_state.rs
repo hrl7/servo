@@ -8,18 +8,20 @@
 //! In release builds, `get` returns 0.  All of the other functions inline
 //! away to nothing.
 
+#![allow(non_upper_case_globals)]
+
 pub use self::imp::{initialize, get, enter, exit};
 
 bitflags! {
     #[deriving(Show)]
     flags TaskState: u32 {
-        static Script        = 0x01,
-        static Layout        = 0x02,
-        static Render        = 0x04,
+        const Script        = 0x01,
+        const Layout        = 0x02,
+        const Render        = 0x04,
 
-        static InWorker      = 0x0100,
-        static InGC          = 0x0200,
-        static InHTMLParser  = 0x0400,
+        const InWorker      = 0x0100,
+        const InGC          = 0x0200,
+        const InHTMLParser  = 0x0400,
     }
 }
 
@@ -52,14 +54,14 @@ mod imp {
     pub fn initialize(x: TaskState) {
         match STATE.replace(Some(x)) {
             None => (),
-            Some(s) => fail!("Task state already initialized as {}", s),
+            Some(s) => panic!("Task state already initialized as {}", s),
         };
         get(); // check the assertion below
     }
 
     pub fn get() -> TaskState {
         let state = match STATE.get() {
-            None => fail!("Task state not initialized"),
+            None => panic!("Task state not initialized"),
             Some(s) => *s,
         };
 
