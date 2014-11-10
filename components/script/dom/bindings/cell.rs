@@ -6,7 +6,7 @@ use dom::bindings::trace::JSTraceable;
 use js::jsapi::{JSTracer};
 
 use servo_util::task_state;
-use servo_util::task_state::{Script, InGC};
+use servo_util::task_state::{SCRIPT, IN_GC};
 
 use std::cell::{Cell, UnsafeCell};
 use std::kinds::marker;
@@ -39,7 +39,7 @@ impl<T> DOMRefCell<T> {
     /// This succeeds even if the object is mutably borrowed,
     /// so you have to be careful in trace code!
     pub unsafe fn borrow_for_gc_trace<'a>(&'a self) -> &'a T {
-        debug_assert!(task_state::get().contains(Script | InGC));
+        debug_assert!(task_state::get().contains(SCRIPT | IN_GC));
         &*self.value.get()
     }
 

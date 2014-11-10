@@ -183,7 +183,7 @@ impl LayoutTaskFactory for LayoutTask {
                   time_profiler_chan: TimeProfilerChan,
                   shutdown_chan: Sender<()>) {
         let ConstellationChan(con_chan) = constellation_chan.clone();
-        spawn_named_with_send_on_failure("LayoutTask", task_state::Layout, proc() {
+        spawn_named_with_send_on_failure("LayoutTask", task_state::LAYOUT, proc() {
             { // Ensures layout task is destroyed before we send shutdown message
                 let sender = chan.sender();
                 let layout =
@@ -254,7 +254,7 @@ impl LayoutTask {
         let screen_size = Size2D(Au(0), Au(0));
         let device = Device::new(Screen, opts::get().initial_window_size.as_f32() * ScaleFactor(1.0));
         let parallel_traversal = if opts::get().layout_threads != 1 {
-            Some(WorkQueue::new("LayoutWorker", task_state::Layout,
+            Some(WorkQueue::new("LayoutWorker", task_state::LAYOUT,
                                 opts::get().layout_threads, ptr::null()))
         } else {
             None

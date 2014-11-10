@@ -152,7 +152,7 @@ impl<C> RenderTask<C> where C: RenderListener + Send {
                   time_profiler_chan: TimeProfilerChan,
                   shutdown_chan: Sender<()>) {
         let ConstellationChan(c) = constellation_chan.clone();
-        spawn_named_with_send_on_failure("RenderTask", task_state::Render, proc() {
+        spawn_named_with_send_on_failure("RenderTask", task_state::RENDER, proc() {
             {
                 // Ensures that the render task and graphics context are destroyed before the
                 // shutdown message.
@@ -570,4 +570,3 @@ enum MsgToWorkerThread {
 enum MsgFromWorkerThread {
     PaintedTileMsgFromWorkerThread(Box<LayerBuffer>),
 }
-

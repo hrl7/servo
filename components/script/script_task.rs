@@ -264,7 +264,7 @@ impl ScriptTaskFactory for ScriptTask {
         let ConstellationChan(const_chan) = constellation_chan.clone();
         let (script_chan, script_port) = channel();
         let layout_chan = LayoutChan(layout_chan.sender());
-        spawn_named_with_send_on_failure("ScriptTask", task_state::Script, proc() {
+        spawn_named_with_send_on_failure("ScriptTask", task_state::SCRIPT, proc() {
             let script_task = ScriptTask::new(id,
                                               box compositor as Box<ScriptListener>,
                                               layout_chan,
@@ -288,8 +288,8 @@ impl ScriptTaskFactory for ScriptTask {
 
 unsafe extern "C" fn debug_gc_callback(_rt: *mut JSRuntime, status: JSGCStatus) {
     match status {
-        JSGC_BEGIN => task_state::enter(task_state::InGC),
-        JSGC_END   => task_state::exit(task_state::InGC),
+        JSGC_BEGIN => task_state::enter(task_state::IN_GC),
+        JSGC_END   => task_state::exit(task_state::IN_GC),
         _ => (),
     }
 }
@@ -1131,4 +1131,3 @@ fn get_page(page: &Rc<Page>, pipeline_id: PipelineId) -> Rc<Page> {
         message for a layout channel that is not associated with this script task.\
          This is a bug.")
 }
-

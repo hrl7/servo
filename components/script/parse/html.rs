@@ -25,7 +25,7 @@ use encoding::types::{Encoding, DecodeReplace};
 use servo_net::resource_task::{Load, LoadData, Payload, Done, ResourceTask};
 use servo_msg::constellation_msg::LoadData as MsgLoadData;
 use servo_util::task_state;
-use servo_util::task_state::InHTMLParser;
+use servo_util::task_state::IN_HTML_PARSER;
 use std::ascii::AsciiExt;
 use std::comm::channel;
 use std::str::MaybeOwned;
@@ -244,7 +244,7 @@ pub fn parse_html(page: &Page,
     let parser = ServoHTMLParser::new(base_url.clone(), document).root();
     let parser: JSRef<ServoHTMLParser> = *parser;
 
-    task_state::enter(InHTMLParser);
+    task_state::enter(IN_HTML_PARSER);
 
     match input {
         InputString(s) => {
@@ -278,7 +278,7 @@ pub fn parse_html(page: &Page,
 
     parser.finish();
 
-    task_state::exit(InHTMLParser);
+    task_state::exit(IN_HTML_PARSER);
 
     debug!("finished parsing");
 }

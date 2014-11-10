@@ -8,20 +8,18 @@
 //! In release builds, `get` returns 0.  All of the other functions inline
 //! away to nothing.
 
-#![allow(non_upper_case_globals)]
-
 pub use self::imp::{initialize, get, enter, exit};
 
 bitflags! {
     #[deriving(Show)]
     flags TaskState: u32 {
-        const Script        = 0x01,
-        const Layout        = 0x02,
-        const Render        = 0x04,
+        const SCRIPT          = 0x01,
+        const LAYOUT          = 0x02,
+        const RENDER          = 0x04,
 
-        const InWorker      = 0x0100,
-        const InGC          = 0x0200,
-        const InHTMLParser  = 0x0400,
+        const IN_WORKER       = 0x0100,
+        const IN_GC           = 0x0200,
+        const IN_HTML_PARSER  = 0x0400,
     }
 }
 
@@ -40,9 +38,9 @@ macro_rules! task_types ( ( $( $fun:ident = $flag:ident ; )* ) => (
 ))
 
 task_types! {
-    is_script = Script;
-    is_layout = Layout;
-    is_render = Render;
+    is_script = SCRIPT;
+    is_layout = LAYOUT;
+    is_render = RENDER;
 }
 
 #[cfg(not(ndebug))]
