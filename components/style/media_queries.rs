@@ -25,11 +25,10 @@ pub struct MediaQueryList {
     media_queries: Vec<MediaQuery>
 }
 
-#[allow(dead_code)]
 pub enum Range<T> {
     Min(T),
     Max(T),
-    Eq(T),
+    //Eq(T),    // FIXME: Implement parsing support for equality then re-enable this.
 }
 
 impl<T: Ord> Range<T> {
@@ -37,7 +36,7 @@ impl<T: Ord> Range<T> {
         match *self {
             Min(ref width) => { value >= *width },
             Max(ref width) => { value <= *width },
-            Eq(ref width) => { value == *width },
+            //Eq(ref width) => { value == *width },
         }
     }
 }
