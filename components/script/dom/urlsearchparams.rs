@@ -65,7 +65,9 @@ impl<'a> URLSearchParamsMethods for JSRef<'a, URLSearchParams> {
 
         match data.entry(name) {
             Occupied(entry) => entry.into_mut().push(value),
-            Vacant  (entry) => { entry.set(vec!(value)); },
+            Vacant(entry) => {
+                entry.set(vec!(value));
+            }
         }
 
         self.update_steps();

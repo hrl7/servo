@@ -138,11 +138,10 @@ impl<'a> EventTargetHelpers for JSRef<'a, EventTarget> {
                                  ty: DOMString,
                                  listener: Option<EventListener>) {
         let mut handlers = self.handlers.borrow_mut();
-        let entries =
-            match handlers.entry(ty) {
+        let entries = match handlers.entry(ty) {
                 Occupied(entry) => entry.into_mut(),
-                Vacant  (entry) => entry.set(vec!()),
-            };
+                Vacant(entry) => entry.set(vec!()),
+        };
 
         let idx = entries.iter().position(|&entry| {
             match entry.listener {
@@ -247,11 +246,10 @@ impl<'a> EventTargetMethods for JSRef<'a, EventTarget> {
         match listener {
             Some(listener) => {
                 let mut handlers = self.handlers.borrow_mut();
-                let entry =
-                    match handlers.entry(ty) {
+                let entry = match handlers.entry(ty) {
                         Occupied(entry) => entry.into_mut(),
-                        Vacant  (entry) => entry.set(vec!()),
-                    };
+                        Vacant(entry) => entry.set(vec!()),
+                };
 
                 let phase = if capture { Capturing } else { Bubbling };
                 let new_entry = EventListenerEntry {

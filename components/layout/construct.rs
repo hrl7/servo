@@ -53,7 +53,7 @@ use script::dom::node::{DocumentNodeTypeId, ElementNodeTypeId, ProcessingInstruc
 use script::dom::node::{TextNodeTypeId};
 use script::dom::htmlobjectelement::is_image_data;
 use servo_util::opts;
-use std::collections::{DList};
+use std::collections::DList;
 use std::mem;
 use std::sync::atomic::Relaxed;
 use style::ComputedValues;

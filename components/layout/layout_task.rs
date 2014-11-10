@@ -663,6 +663,7 @@ impl LayoutTask {
                                                                          .background_color)
                                          .to_gfx_color()
                     };
+                    // FIXME: Add equality operators for azure color type.
                     if element_bg_color.r != 0.0 || element_bg_color.g != 0.0 ||
                        element_bg_color.b != 0.0 || element_bg_color.a != 0.0 {
                         color = element_bg_color;

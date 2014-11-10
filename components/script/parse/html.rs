@@ -210,8 +210,6 @@ pub fn parse_html(page: &Page,
 
             let load_response = input_port.recv();
 
-            //debug!("Fetched page; metadata is {}", load_response.metadata);
-
             load_response.metadata.headers.as_ref().map(|headers| {
                 let header = headers.iter().find(|h|
                     h.header_name().as_slice().to_ascii_lower() == "last-modified".to_string()

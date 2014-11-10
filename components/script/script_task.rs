@@ -622,7 +622,6 @@ impl ScriptTask {
     }
 
     fn handle_new_layout(&self, new_layout_info: NewLayoutInfo) {
-        //debug!("Script: new layout: {}", new_layout_info);
         let NewLayoutInfo {
             old_pipeline_id,
             new_pipeline_id,

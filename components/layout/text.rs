@@ -19,7 +19,7 @@ use servo_util::geometry::Au;
 use servo_util::logical_geometry::{LogicalSize, WritingMode};
 use servo_util::range::Range;
 use servo_util::smallvec::{SmallVec, SmallVec1};
-use std::collections::{DList};
+use std::collections::DList;
 use std::mem;
 use style::ComputedValues;
 use style::computed_values::{line_height, text_orientation, white_space};
