@@ -15,39 +15,39 @@ use std::num::Zero;
 bitflags!(
     #[deriving(Encodable)]
     flags WritingMode: u8 {
-        const FlagRTL = 1 << 0,
-        const FlagVertical = 1 << 1,
-        const FlagVerticalLR = 1 << 2,
-        const FlagSidewaysLeft = 1 << 3
+        const FLAG_RTL = 1 << 0,
+        const FLAG_VERTICAL = 1 << 1,
+        const FLAG_VERTICAL_LR = 1 << 2,
+        const FLAG_SIDEWAYS_LEFT = 1 << 3
     }
 )
 
 impl WritingMode {
     #[inline]
     pub fn is_vertical(&self) -> bool {
-        self.intersects(FlagVertical)
+        self.intersects(FLAG_VERTICAL)
     }
 
     /// Asuming .is_vertical(), does the block direction go left to right?
     #[inline]
     pub fn is_vertical_lr(&self) -> bool {
-        self.intersects(FlagVerticalLR)
+        self.intersects(FLAG_VERTICAL_LR)
     }
 
     /// Asuming .is_vertical(), does the inline direction go top to bottom?
     #[inline]
     pub fn is_inline_tb(&self) -> bool {
-        !(self.intersects(FlagSidewaysLeft) ^ self.intersects(FlagRTL))
+        !(self.intersects(FLAG_SIDEWAYS_LEFT) ^ self.intersects(FLAG_RTL))
     }
 
     #[inline]
     pub fn is_bidi_ltr(&self) -> bool {
-        !self.intersects(FlagRTL)
+        !self.intersects(FLAG_RTL)
     }
 
     #[inline]
     pub fn is_sideways_left(&self) -> bool {
-        self.intersects(FlagSidewaysLeft)
+        self.intersects(FLAG_SIDEWAYS_LEFT)
     }
 }
 
@@ -60,7 +60,7 @@ impl Show for WritingMode {
             } else {
                 try!(write!(formatter, " RL"));
             }
-            if self.intersects(FlagSidewaysLeft) {
+            if self.intersects(FLAG_SIDEWAYS_LEFT) {
                 try!(write!(formatter, " SidewaysL"));
             }
         } else {

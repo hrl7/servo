@@ -1846,27 +1846,27 @@ fn get_writing_mode(inheritedbox_style: &style_structs::InheritedBox) -> Writing
     match inheritedbox_style.direction {
         computed_values::direction::ltr => {},
         computed_values::direction::rtl => {
-            flags.insert(logical_geometry::FlagRTL);
+            flags.insert(logical_geometry::FLAG_RTL);
         },
     }
     match inheritedbox_style.writing_mode {
         computed_values::writing_mode::horizontal_tb => {},
         computed_values::writing_mode::vertical_rl => {
-            flags.insert(logical_geometry::FlagVertical);
+            flags.insert(logical_geometry::FLAG_VERTICAL);
         },
         computed_values::writing_mode::vertical_lr => {
-            flags.insert(logical_geometry::FlagVertical);
-            flags.insert(logical_geometry::FlagVerticalLR);
+            flags.insert(logical_geometry::FLAG_VERTICAL);
+            flags.insert(logical_geometry::FLAG_VERTICAL_LR);
         },
     }
     match inheritedbox_style.text_orientation {
         computed_values::text_orientation::sideways_right => {},
         computed_values::text_orientation::sideways_left => {
-            flags.insert(logical_geometry::FlagSidewaysLeft);
+            flags.insert(logical_geometry::FLAG_VERTICAL_LR);
         },
         computed_values::text_orientation::sideways => {
-            if flags.intersects(logical_geometry::FlagVerticalLR) {
-                flags.insert(logical_geometry::FlagSidewaysLeft);
+            if flags.intersects(logical_geometry::FLAG_VERTICAL_LR) {
+                flags.insert(logical_geometry::FLAG_SIDEWAYS_LEFT);
             }
         },
     }

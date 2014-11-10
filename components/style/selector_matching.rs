@@ -2,8 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#![allow(non_upper_case_globals)]
-
 use std::ascii::AsciiExt;
 use std::collections::HashMap;
 use std::hash::Hash;
@@ -815,11 +813,11 @@ fn matches_compound_selector_internal<'a,E,N>(selector: &CompoundSelector,
 
 bitflags! {
     flags CommonStyleAffectingAttributes: u8 {
-        const HiddenAttribute = 0x01,
-        const NoWrapAttribute = 0x02,
-        const AlignLeftAttribute = 0x04,
-        const AlignCenterAttribute = 0x08,
-        const AlignRightAttribute = 0x10,
+        const HIDDEN_ATTRIBUTE = 0x01,
+        const NO_WRAP_ATTRIBUTE = 0x02,
+        const ALIGN_LEFT_ATTRIBUTE = 0x04,
+        const ALIGN_CENTER_ATTRIBUTE = 0x08,
+        const ALIGN_RIGHT_ATTRIBUTE = 0x10,
     }
 }
 
@@ -839,23 +837,23 @@ pub fn common_style_affecting_attributes() -> [CommonStyleAffectingAttributeInfo
     [
         CommonStyleAffectingAttributeInfo {
             atom: atom!("hidden"),
-            mode: AttrIsPresentMode(HiddenAttribute),
+            mode: AttrIsPresentMode(HIDDEN_ATTRIBUTE),
         },
         CommonStyleAffectingAttributeInfo {
             atom: atom!("nowrap"),
-            mode: AttrIsPresentMode(NoWrapAttribute),
+            mode: AttrIsPresentMode(NO_WRAP_ATTRIBUTE),
         },
         CommonStyleAffectingAttributeInfo {
             atom: atom!("align"),
-            mode: AttrIsEqualMode("left", AlignLeftAttribute),
+            mode: AttrIsEqualMode("left", ALIGN_LEFT_ATTRIBUTE),
         },
         CommonStyleAffectingAttributeInfo {
             atom: atom!("align"),
-            mode: AttrIsEqualMode("center", AlignCenterAttribute),
+            mode: AttrIsEqualMode("center", ALIGN_CENTER_ATTRIBUTE),
         },
         CommonStyleAffectingAttributeInfo {
             atom: atom!("align"),
-            mode: AttrIsEqualMode("right", AlignRightAttribute),
+            mode: AttrIsEqualMode("right", ALIGN_RIGHT_ATTRIBUTE),
         }
     ]
 }
@@ -1268,4 +1266,3 @@ mod tests {
         assert!(selector_map.class_hash.find(&Atom::from_slice("foo")).is_none());
     }
 }
-

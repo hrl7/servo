@@ -49,7 +49,7 @@ use script::dom::htmlimageelement::LayoutHTMLImageElementHelpers;
 use script::dom::htmlinputelement::LayoutHTMLInputElementHelpers;
 use script::dom::node::{DocumentNodeTypeId, ElementNodeTypeId, Node, NodeTypeId};
 use script::dom::node::{LayoutNodeHelpers, RawLayoutNodeHelpers, SharedLayoutData};
-use script::dom::node::{HasChanged, IsDirty, HasDirtySiblings, HasDirtyDescendants};
+use script::dom::node::{HAS_CHANGED, IS_DIRTY, HAS_DIRTY_SIBLINGS, HAS_DIRTY_DESCENDANTS};
 use script::dom::text::Text;
 use script::layout_interface::LayoutChan;
 use servo_msg::constellation_msg::{PipelineId, SubpageId};
@@ -390,35 +390,35 @@ impl<'ln> TNode<'ln, LayoutElement<'ln>> for LayoutNode<'ln> {
     }
 
     fn has_changed(self) -> bool {
-        unsafe { self.node.get_flag(HasChanged) }
+        unsafe { self.node.get_flag(HAS_CHANGED) }
     }
 
     unsafe fn set_changed(self, value: bool) {
-        self.node.set_flag(HasChanged, value)
+        self.node.set_flag(HAS_CHANGED, value)
     }
 
     fn is_dirty(self) -> bool {
-        unsafe { self.node.get_flag(IsDirty) }
+        unsafe { self.node.get_flag(IS_DIRTY) }
     }
 
     unsafe fn set_dirty(self, value: bool) {
-        self.node.set_flag(IsDirty, value)
+        self.node.set_flag(IS_DIRTY, value)
     }
 
     fn has_dirty_siblings(self) -> bool {
-        unsafe { self.node.get_flag(HasDirtySiblings) }
+        unsafe { self.node.get_flag(HAS_DIRTY_SIBLINGS) }
     }
 
     unsafe fn set_dirty_siblings(self, value: bool) {
-        self.node.set_flag(HasDirtySiblings, value);
+        self.node.set_flag(HAS_DIRTY_SIBLINGS, value);
     }
 
     fn has_dirty_descendants(self) -> bool {
-        unsafe { self.node.get_flag(HasDirtyDescendants) }
+        unsafe { self.node.get_flag(HAS_DIRTY_DESCENDANTS) }
     }
 
     unsafe fn set_dirty_descendants(self, value: bool) {
-        self.node.set_flag(HasDirtyDescendants, value)
+        self.node.set_flag(HAS_DIRTY_DESCENDANTS, value)
     }
 }
 
